@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>WebApplication2.DataTransfer</AssemblyName>
+    <RootNamespace>WebApplication2.DataTransfer</RootNamespace>
+  </PropertyGroup>
+
+</Project>
