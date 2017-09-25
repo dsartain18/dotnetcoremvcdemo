@@ -17,10 +17,11 @@ namespace WebApplication2
         {
             IConfigurationRoot config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false)            
+            .AddJsonFile("appsettings.json", optional: false)
+            .AddJsonFile("hosting.json", optional: false)
             .Build();
             
-            var host = new WebHostBuilder()
+            IWebHost host = new WebHostBuilder()
             .UseKestrel()            
             .UseConfiguration(config)
             .UseContentRoot(Directory.GetCurrentDirectory())

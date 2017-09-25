@@ -16,9 +16,11 @@ namespace mvctest
         {
             // Load Hosting Configuration that contains the URLs with custom ports
             IConfigurationRoot config = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("hosting.json", optional:true)
+                        .SetBasePath(Directory.GetCurrentDirectory()) 
+                        .AddJsonFile("hosting.json", optional:true)                      
                         .Build();
+
+                        // .AddJsonFile("hosting.json", optional:true)
 
             // Create IWebHost using Kestrel. Use Configuration.
             IWebHost host = new WebHostBuilder()

@@ -35,7 +35,10 @@ namespace WebApplication2.DependencyResolution
             services.AddTransient<IRDSRepo, RDSRepo>();
 
             services.AddMvc()
-                .AddApplicationPart(Assembly.Load(new AssemblyName("WebApplication2.Controllers")));            
+                .AddApplicationPart(Assembly.Load(new AssemblyName("WebApplication2.Controllers")));
+                        
+            // Loads AWS Default Options from appSettings.JSON
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,8 +59,9 @@ namespace WebApplication2.DependencyResolution
                 throw new ArgumentNullException("loggerFactory");
             }
 
+            // AWS Lambda Logging Configuration
             loggerFactory.AddLambdaLogger(Configuration.GetLambdaLoggerOptions());
-
+            
             if (hostingEnvironment.IsDevelopment())
             {
                 applicationBuilder.UseDeveloperExceptionPage();
