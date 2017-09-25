@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 
 using WebApplication2.Entities.Entities;
@@ -27,8 +28,7 @@ namespace WebApplication2.DependencyResolution
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("EFCoreTest");
-
-            //TESTContext.ConnectionString = Configuration.GetConnectionString("EFCoreTest");
+            
             services.AddDbContext<TESTContext>(options => options.UseSqlServer(connectionString));
 
             services.AddTransient<IRDSManager, RDSManager>();
@@ -39,21 +39,38 @@ namespace WebApplication2.DependencyResolution
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder applicationBuilder, IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
+            if (applicationBuilder == null)
             {
-                app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                throw new ArgumentNullException("applicationBuilder");
+            }
+
+            if (hostingEnvironment == null)
+            {
+                throw new ArgumentNullException("hostingEnvironment");
+            }
+
+            if (loggerFactory == null)
+            {
+                throw new ArgumentNullException("loggerFactory");
+            }
+
+            loggerFactory.AddLambdaLogger(Configuration.GetLambdaLoggerOptions());
+
+            if (hostingEnvironment.IsDevelopment())
+            {
+                applicationBuilder.UseDeveloperExceptionPage();
+                applicationBuilder.UseBrowserLink();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                applicationBuilder.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
+            applicationBuilder.UseStaticFiles();
 
-            app.UseMvc(routes =>
+            applicationBuilder.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
