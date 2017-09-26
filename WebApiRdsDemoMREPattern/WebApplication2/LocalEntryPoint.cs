@@ -11,22 +11,23 @@ using System.Reflection;
 
 namespace WebApplication2
 {
-    public class Program
+    public class LocalEntryPoint
     {
         public static void Main(string[] args)
         {
             IConfigurationRoot config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false)            
+            .AddJsonFile("appsettings.json", optional: false)
+            .AddJsonFile("hosting.json", optional: false)
             .Build();
             
-            var host = new WebHostBuilder()
+            IWebHost host = new WebHostBuilder()
             .UseKestrel()            
             .UseConfiguration(config)
             .UseContentRoot(Directory.GetCurrentDirectory())
             .UseIISIntegration()
-            .UseStartup<WebApplication2.DependencyResolution.Startup>()
-            .UseSetting(WebHostDefaults.ApplicationKey, typeof(Program).GetTypeInfo().Assembly.FullName) // Ignore the startup class assembly as the "entry point" and instead point it to this app
+            .UseStartup<DependencyResolution.Startup>()
+            .UseSetting(WebHostDefaults.ApplicationKey, typeof(LocalEntryPoint).GetTypeInfo().Assembly.FullName) // Ignore the startup class assembly as the "entry point" and instead point it to this app
             .Build();
 
             host.Run();
